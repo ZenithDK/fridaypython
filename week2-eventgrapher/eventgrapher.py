@@ -46,11 +46,11 @@ while True:
                 if current_event.event != "":
                     label = current_event.event
                     if current_event.guard != "":
-                        label += "\nGuard: %s"%current_event.guard
+                        label += "\\nGuard: %s"%current_event.guard
                     if current_event.action != "":
-                        label += "\nAction: %s(%s)"%(current_event.action, current_event.action_params)
+                        label += "\\nAction: %s(%s)"%(current_event.action, current_event.action_params)
                     for extra_action in current_event.extra_actions:
-                        label += "\n[ %s ]"%extra_action
+                        label += "\\n[ %s ]"%extra_action
 
                     color_params = {}
                     if color > 0:
@@ -63,7 +63,7 @@ while True:
                     state_graph.edge(
                             current_event.state,
                             current_event.new_state,
-                            label=label,
+                            label="%s"%label,
                             **color_params
                         )
                     color = (color+1)%8
