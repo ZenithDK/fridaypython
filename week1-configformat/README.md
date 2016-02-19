@@ -7,7 +7,7 @@ This is a formatter for application/config/vmkit/\*\_config.h files.
 It does two things:
 
 * Formats the state- and event-tables to an even column width
-* If a <state> not equal to "0" and <new state> is the same as <state>, then <new state> is replaced with "0".
+* If a \<state\> not equal to "0" and \<new state\> is the same as \<state\>, then \<new state\> is replaced with "0".
 
 ## Usage
 
