@@ -12,7 +12,7 @@ if len(sys.argv) < 2:
 
 config_fh = open(sys.argv[1], "r")
 
-state_graph = Digraph("State Diagram")
+state_graph = Digraph("State Diagram", format="svg")
 state_graph.attr("graph", rankdir="LR")
 state_graph.attr("graph", ranksep="5.0")
 color = 0
