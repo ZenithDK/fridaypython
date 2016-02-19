@@ -1,4 +1,4 @@
-# Week 2 - Event Parser
+# Week 2 - Event Grapher
 
 ## What is it?
 
@@ -15,7 +15,7 @@ $ sudo pip install graphviz
 ## Usage
 
 ```bash
-python eventparser.py <name_of_config_file>
+python eventgrapher.py <name_of_config_file>
 ```
 
 The output will be saved to <basename\_of\_config\_file>.sd.pdf
