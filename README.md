@@ -1,0 +1,2 @@
+# fridaypython
+Friday Python scripts
