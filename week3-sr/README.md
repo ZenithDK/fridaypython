@@ -42,7 +42,7 @@ python search.py path/to/your/picle/file <searchTerm0> ... [searchTermN]
 
 ### Example usage:
 
-Creating the dump-file (this is a long and really not that interesting):
+Creating the dump-file (this is a long and really not that interesting, check the one below instead):
 
 [![asciicast](https://asciinema.org/a/29kz3pc5k5uak68dr3iwmjf73.png)](https://asciinema.org/a/29kz3pc5k5uak68dr3iwmjf73)
 
