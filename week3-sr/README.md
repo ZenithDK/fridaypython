@@ -8,7 +8,7 @@ One of them crawls the csrsupport.com site for our SR list and then downloads al
 
 The other script does a (linear) keyword search through the Pickle file and returns colorized results to STDOUT.
 
-Piping the output to less is useful. An example helper-shellscript is provided.
+Piping the output to less is useful.
 
 ## Installation
 
@@ -48,4 +48,4 @@ Creating the dump-file (this is a long and really not that interesting, check th
 
 Perfoming searches:
 
-[![asciicast](https://asciinema.org/a/c7voy1zta7lq422dnutkjp225.png)](https://asciinema.org/a/c7voy1zta7lq422dnutkjp225)
+[![asciicast](https://asciinema.org/a/b9frxl927f7nogh9kwbrtnlvg.png)](https://asciinema.org/a/b9frxl927f7nogh9kwbrtnlvg)
