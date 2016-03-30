@@ -1,4 +1,4 @@
-# Week 2 - Create a UML sequence diagram from state-transition printf's
+# Week 4 - Create a UML sequence diagram from state-transition printf's
 
 ## What is it?
 
