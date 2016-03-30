@@ -1,0 +1,8 @@
+BmExecuteEvent:
+printf("i:[e: %d][s: %d]\n", event, bmData.semTables.state);
+
+BmEventResult:
+printf("r:[e: %d][r: %d]\n", event, result);
+
+BmStateTransition:
+printf("t:[%d]\n", new_state);
