@@ -41,7 +41,7 @@ class Hameg:
     def getOutputState(self):
         self.serialPort.write("STA\r\n")
         response = self.serialPort.readline()
-        return bool(int(response.strip()[2]))
+        return response.strip()[2] == 49 #ASCII 1
 
     def getVoltage(self, output):
         """
