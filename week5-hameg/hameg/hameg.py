@@ -3,9 +3,23 @@
 
 import serial
 
+class HamegPort(serial.Serial):
+    def __init__(self, portname, baudrate=9600, auto_connect=True):
+        super(HamegPort, self).__init__(portname, baudrate=baudrate)
+
+    def readline(self):
+        input_buffer = bytearray()
+        while True:
+            input_byte = self.read(1)
+            # It's probably best to follow convention and append the \r
+            input_buffer.append(input_byte)
+            if input_byte == "\r":
+                return input_buffer
+
+
 class Hameg:
     def __init__(self, portname, baudrate=9600, auto_connect=True):
-        self.serialPort = serial.Serial(portname, baudrate=baudrate)
+        self.serialPort = HamegPort(portname, baudrate=baudrate)
         if auto_connect:
             self.connect()
 
