@@ -1,4 +1,4 @@
-# Week 1 - Config Format
+# Config Format
 
 ## What is it?
 

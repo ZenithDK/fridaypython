@@ -1,4 +1,4 @@
-# Week 2 - Event Grapher
+# Event Grapher
 
 ## What is it?
 

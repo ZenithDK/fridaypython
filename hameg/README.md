@@ -1,4 +1,6 @@
-# Week 5 - Python module for controlling a Hameg HM8143 PSU (and probably others from Hameg)
+# Python module for controlling a Hameg HM8143 PSU
+
+Probably works with other PSUs from Hameg as well.
 
 ## What is it?
 

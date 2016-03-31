@@ -1,4 +1,4 @@
-# Week 3 - Service Requests locally
+# Service Requests locally
 
 ## What is it?
 
