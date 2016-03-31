@@ -11,7 +11,13 @@ Example printf's are in printfs.txt
 
 ### On Windows
 
-I might add something later. Or not.
+* Get Python somehow.
+  * https://www.google.com/search?q=python+windows
+* Get seqdiag somehow.
+  * https://www.google.com/search?q=python+seqdiag+windows
+* Make sure it works together somehow.
+  * https://www.google.com/search?q=getting+python+to+work+on+inferior+operating+systems
+
 
 ### On a sane operating system
 ```bash
