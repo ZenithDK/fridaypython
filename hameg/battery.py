@@ -10,7 +10,7 @@ import hameg
 import time
 
 TOTAL_CAPACITY = 205 # mAh
-TIME_DIVISION = 5 # Charging will happen this much (times) faster.
+MULTIPLIER = 20 # Charging will happen this much (times) faster.
 HAMEG_PORT = "/dev/ttyUSB1"
 HAMEG_OUTPUT = 1
 
@@ -32,16 +32,17 @@ psu.setVoltage(HAMEG_OUTPUT, BATTERY_VOLTAGE)
 psu.setCurrent(HAMEG_OUTPUT, 0.5)
 
 while True:
-    current = psu.getMeasuredCurrent(HAMEG_OUTPUT)*1000 # converted to mA
+    current = (psu.getMeasuredCurrent(HAMEG_OUTPUT)*1000)*MULTIPLIER # converted to mA
     current_time = time.time()
-    battery_capacity = battery_capacity - ((current / ((current_time-last_time)) / 3600) * TIME_DIVISION)
+    battery_capacity = battery_capacity - (current / ((current_time-last_time)) / 3600)
     battery_voltage = mapValues(battery_capacity, 0, TOTAL_CAPACITY, MINIMUM_VOLTAGE, MAXIMUM_VOLTAGE)
     psu.setVoltage(HAMEG_OUTPUT, min(battery_voltage, MAXIMUM_VOLTAGE)) # Make sure we don't go over voltage.
-    print "Voltage: %0.2fV (prog.: %0.2fV)\tCurrent: %0.3fA (prog.: %0.2fA)\tSimulated capacity left: %dmAh"%(
+    print "Voltage: %0.2fV (prog.: %0.2fV)\tCurrent: %0.3fA (prog.: %0.2fA, sim.: %0.2fA)\tSim-Cap: %dmAh"%(
             psu.getMeasuredVoltage(HAMEG_OUTPUT),
             psu.getVoltage(HAMEG_OUTPUT),
             psu.getMeasuredCurrent(HAMEG_OUTPUT),
             psu.getCurrent(HAMEG_OUTPUT),
+            current/1000,
             battery_capacity
             )
     if battery_voltage < MINIMUM_VOLTAGE:
