@@ -111,7 +111,7 @@ def state_transition(line):
     global current_event
     global current_state
     numbers = re.findall(r"\d+", line)
-    current_event.exit_state = int(numbers[0])
+    current_event.exit_state = int(numbers[0])-1
     current_state = int(numbers[0])-1
 
 #    print "State Transition: New state: %s"%state_name
