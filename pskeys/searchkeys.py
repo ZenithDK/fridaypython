@@ -7,7 +7,7 @@ from colored import fg, attr
 
 
 if len(sys.argv) < 2:
-    sys.stderr.write("Usage: %s <searchString1> ... [searchStringN]\n")
+    sys.stderr.write("Usage: %s <searchString1> ... [searchStringN]\n"%sys.argv[0])
     sys.exit(1)
 
 all_entries = pickle.load(open("pskeys.p", "rb"))

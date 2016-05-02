@@ -24,6 +24,8 @@ class Hameg:
             self.connect()
 
     def connect(self):
+        while self.serialPort.inWaiting():
+            self.serialPort.read()
         self.serialPort.write("MX1\r\n")
 
     def clear(self):

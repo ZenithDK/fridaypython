@@ -21,7 +21,7 @@ while True:
     if not line:
         break
 
-    if interesting_section and "#endif" in line:
+    if interesting_section and ("#endif" in line or line.strip() == ""):
         interesting_section = False
 
     if interesting_section:
@@ -142,11 +142,25 @@ while True:
 
 transition_spec = ""
 used_states = []
+for k, v in enumerate(all_names["states"]):
+    print k, v
+print ""
+for k, v in enumerate(all_names["events"]):
+    print k+1, v
 for event in sequence:
-    enter_state_name = all_names["states"][event.enter_state]
+    try:
+        enter_state_name = all_names["states"][event.enter_state]
+    except IndexError:
+        sys.stderr.write("Unable to determine state name for index: %d\n"%event.enter_state)
+        sys.exit(1)
+        
     used_states.append(enter_state_name)
     exit_state_name = all_names["states"][event.exit_state]
-    event_name = all_names["events"][event.event]
+    try:
+        event_name = all_names["events"][event.event]
+    except IndexError:
+        sys.stderr.write("Unable to determine event name for index: %d\n"%event.event)
+        sys.exit(1)
     delayed_events = ""
     for delayed in event.delayed:
         delayed_events += "%s -> %s [label='Delayed:\\n%s', color=blue, failed];\n"%(
