@@ -80,7 +80,10 @@ if __name__ == "__main__":
             max_lengths["module_identifier"] = len(module_identifier)
         for current_keyword in all_tables.keys():
             for source_file in source_files:
-                table_definition = table_definition_parser(os.path.join(args.project, source_file.replace("/", os.path.sep)), current_keyword)
+                try:
+                    table_definition = table_definition_parser(os.path.join(args.project, source_file.replace("/", os.path.sep)), current_keyword)
+                except IOError:
+                    continue
                 if len(table_definition) > 0:
                     sys.stderr.write("Found %s definition for '%s' in '%s'\n"%(current_keyword, module_identifier, source_file))
                     all_tables[current_keyword][module_identifier] = table_definition
@@ -99,42 +102,42 @@ if __name__ == "__main__":
     results = 0
 
     def process_s(line):
-        address_maps[line[2]] = state_machine_enums.ModuleIdentifier.get_string(int(line[3]))
+        address_maps[line[1]] = state_machine_enums.ModuleIdentifier.get_string(int(line[2]))
 
     def process_i(line):
-        module_identifier = address_maps[line[2]]
+        module_identifier = address_maps[line[1]]
         global events
         events = events + 1
         print "%s%s\tEvent: %s <- %s"%(
                 module_identifier.ljust(max_lengths["module_identifier"], " "),
                 "".join(indents[module_identifier]),
-                all_tables["STATE_LIST"][module_identifier][int(line[4])-1],
-                all_tables["EVENT_LIST"][module_identifier][int(line[3])]
+                all_tables["STATE_LIST"][module_identifier][int(line[3])-1],
+                all_tables["EVENT_LIST"][module_identifier][int(line[2])]
                 )
         if len(indents[module_identifier]) < 1:
             indents[module_identifier].append("\t")
 
     def process_r(line):
-        module_identifier = address_maps[line[2]]
+        module_identifier = address_maps[line[1]]
         global results
         results = results + 1
-        if int(line[4]) != 2:
+        if int(line[3]) != 2:
             indents[module_identifier].pop()
         print "%s%s\tResult: %s: %s"%(
                 module_identifier.ljust(max_lengths["module_identifier"], " "),
                 "".join(indents[module_identifier]),
-                all_tables["EVENT_LIST"][module_identifier][int(line[3])],
-                result_names[int(line[4])]
+                all_tables["EVENT_LIST"][module_identifier][int(line[2])],
+                result_names[int(line[3])]
                 )
                 
 
 
     def process_t(line):
-        module_identifier = address_maps[line[2]]
+        module_identifier = address_maps[line[1]]
         print "%s Transition: %s -> %s"%(
                 module_identifier.ljust(max_lengths["module_identifier"], " "),
-                all_tables["STATE_LIST"][module_identifier][int(line[3])-1],
-                all_tables["STATE_LIST"][module_identifier][int(line[4])-1]
+                all_tables["STATE_LIST"][module_identifier][int(line[2])-1],
+                all_tables["STATE_LIST"][module_identifier][int(line[3])-1]
                 )
 
     process_func = {
@@ -154,8 +157,8 @@ if __name__ == "__main__":
                 break
 
             line = line.strip()
-            if line[0:3] == "MT:":
-                process_func[line[3]](line.split(":"))
+            if line[0] == "&":
+                process_func[line[1]](line.split(":"))
             else:
                 print line
 
