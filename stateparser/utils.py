@@ -1,5 +1,6 @@
 import re
 
+
 def remove_comments(text):
     """ remove c-style comments.
         text: blob of text with comments (can include newlines)
@@ -16,7 +17,7 @@ def remove_comments(text):
                             ##    but do end with '*'
            /                ##  End of /* ... */ comment
          |                  ##  -OR-  various things which aren't comments:
-           (                ## 
+           (                ##
                             ##  ------ " ... " STRING ------
              "              ##  Start of " ... " string
              (              ##
@@ -42,15 +43,17 @@ def remove_comments(text):
              [^/"'\\]*      ##  Chars which doesn't start a comment, string
            )                ##    or escape
     """
-    regex = re.compile(pattern, re.VERBOSE|re.MULTILINE|re.DOTALL)
+    regex = re.compile(pattern, re.VERBOSE | re.MULTILINE | re.DOTALL)
     noncomments = [m.group(2) for m in regex.finditer(text) if m.group(2)]
 
     return "".join(noncomments)
+
 
 def enum_parser(filename):
     fh = open(filename, "r")
     file_contents = remove_comments("\n".join(fh.readlines()))
     fh.close()
+
     class EnumClass:
         def __init__(self):
             self.cache_dict = {}
@@ -67,6 +70,7 @@ def enum_parser(filename):
                 if getattr(self, k) == number:
                     self.cache_dict[number] = k
                     return k
+
         def get_all_strings(self):
             all_strings = []
             for k in dir(self):
@@ -80,7 +84,6 @@ def enum_parser(filename):
             for k in self.get_all_strings():
                 all_numbers.append(getattr(self, k))
             return all_numbers
-
 
     return_object = EnumClass()
     all_tokens = re.split("[\s\;,]+", file_contents)
@@ -100,13 +103,12 @@ def enum_parser(filename):
         if found_enum and v == "}":
             modify_object = return_object
             if typedef_enum:
-                enum_name = all_tokens[index+1]
+                enum_name = all_tokens[index + 1]
                 setattr(modify_object, enum_name, EnumClass())
                 modify_object = getattr(modify_object, enum_name)
             # DO shit
             for k in enum_values.keys():
                 setattr(modify_object, k, enum_values[k])
-            
 
             found_enum = False
             typedef_enum = False
@@ -115,21 +117,20 @@ def enum_parser(filename):
             continue
 
         if found_enum:
-            if all_tokens[index+1] == "=":
-                current_enum_index = int(all_tokens[index+2])
+            if all_tokens[index + 1] == "=":
+                current_enum_index = int(all_tokens[index + 2])
                 enum_values[v] = current_enum_index
                 index = index + 3
             else:
                 enum_values[v] = current_enum_index
                 index = index + 1
-            
+
             current_enum_index = current_enum_index + 1
             continue
 
-
         if v == "enum" or v == "enum{":
             found_enum = True
-            if all_tokens[index-1] == "typedef":
+            if all_tokens[index - 1] == "typedef":
                 typedef_enum = True
             if v == "enum{":
                 index = index + 1
@@ -139,6 +140,7 @@ def enum_parser(filename):
         index = index + 1
 
     return return_object
+
 
 def table_definition_parser(filename, keyword):
     interesting_section = False
@@ -164,4 +166,3 @@ def table_definition_parser(filename, keyword):
 
     c_fh.close()
     return definitions
-

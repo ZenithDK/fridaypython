@@ -11,32 +11,32 @@ from utils import *
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-            prog=sys.argv[0],
-            description="Event/State log parser",
-            formatter_class=argparse.ArgumentDefaultsHelpFormatter
-            )
+        prog=sys.argv[0],
+        description="Event/State log parser",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
 
     parser.add_argument(
-            "log_file",
-            help="Logfile to parse",
-            nargs=1
-            )
+        "log_file",
+        help="Logfile to parse",
+        nargs=1
+    )
 
     parser.add_argument(
-            "-m",
-            "--mapping",
-            dest="mapping_file",
-            help="File containing mappings between enums and header-files",
-            default="default_mappings.ini"
-            )
+        "-m",
+        "--mapping",
+        dest="mapping_file",
+        help="File containing mappings between enums and header-files",
+        default="default_mappings.ini"
+    )
 
     parser.add_argument(
-            "-p",
-            "--project",
-            dest="project",
-            help="Specify project folder",
-            default="."
-            )
+        "-p",
+        "--project",
+        dest="project",
+        help="Specify project folder",
+        default="."
+    )
 
     args = parser.parse_args(sys.argv[1:])
 
@@ -45,32 +45,32 @@ if __name__ == "__main__":
     try:
         mappings.readfp(open(args.mapping_file, "r"))
     except IOError, e:
-        sys.stderr.write("Error: Could not open: %s\n"%e.filename)
+        sys.stderr.write("Error: Could not open: %s\n" % e.filename)
         sys.exit(1)
 
     if not mappings.has_section("mappings"):
-        sys.stderr.write("Error: Couldn't find a 'mappings' section in '%s'\n"%args.mapping_file)
+        sys.stderr.write("Error: Couldn't find a 'mappings' section in '%s'\n" % args.mapping_file)
         sys.exit(1)
 
     try:
         state_machine_enums = enum_parser(os.path.join(
-                    args.project,
-                    "vmkit",
-                    "src",
-                    "secom",
-                    "state_machine",
-                    "state_machine.h"
-                    ))
+            args.project,
+            "vmkit",
+            "src",
+            "secom",
+            "state_machine",
+            "state_machine.h"
+        ))
         getattr(state_machine_enums, "ModuleIdentifier")
     except IOError, e:
-        sys.stderr.write("Error: Could not open: %s\n"%e.filename)
+        sys.stderr.write("Error: Could not open: %s\n" % e.filename)
         sys.exit(1)
     except AttributeError:
         sys.stderr.write("Error: 'state_machine.h' doesn't contain an enum for 'ModuleIdentifier'\n")
         sys.exit(1)
 
-    all_tables = {"STATE_LIST" : {}, "EVENT_LIST" : {} }
-    max_lengths = {"STATE_LIST" : 0, "EVENT_LIST" : 0, "module_identifier" : 0}
+    all_tables = {"STATE_LIST": {}, "EVENT_LIST": {}}
+    max_lengths = {"STATE_LIST": 0, "EVENT_LIST": 0, "module_identifier": 0}
     indents = {}
 
     for module_identifier in state_machine_enums.ModuleIdentifier.get_all_strings():
@@ -85,7 +85,7 @@ if __name__ == "__main__":
                 except IOError:
                     continue
                 if len(table_definition) > 0:
-                    sys.stderr.write("Found %s definition for '%s' in '%s'\n"%(current_keyword, module_identifier, source_file))
+                    sys.stderr.write("Found %s definition for '%s' in '%s'\n" % (current_keyword, module_identifier, source_file))
                     all_tables[current_keyword][module_identifier] = table_definition
                     max_len = len(max(table_definition, key=len))
                     if max_len > max_lengths[current_keyword]:
@@ -96,7 +96,7 @@ if __name__ == "__main__":
     sys.stderr.write("\n\n")
 
     address_maps = {}
-    result_names = ["No Match", "Executed", "Delayed", "Guard Failed" ]
+    result_names = ["No Match", "Executed", "Delayed", "Guard Failed"]
 
     events = 0
     results = 0
@@ -108,12 +108,12 @@ if __name__ == "__main__":
         module_identifier = address_maps[line[1]]
         global events
         events = events + 1
-        print "%s%s\tEvent: %s <- %s"%(
-                module_identifier.ljust(max_lengths["module_identifier"], " "),
-                "".join(indents[module_identifier]),
-                all_tables["STATE_LIST"][module_identifier][int(line[3])-1],
-                all_tables["EVENT_LIST"][module_identifier][int(line[2])]
-                )
+        print "%s%s\tEvent: %s <- %s" % (
+            module_identifier.ljust(max_lengths["module_identifier"], " "),
+            "".join(indents[module_identifier]),
+            all_tables["STATE_LIST"][module_identifier][int(line[3]) - 1],
+            all_tables["EVENT_LIST"][module_identifier][int(line[2])]
+        )
         if len(indents[module_identifier]) < 1:
             indents[module_identifier].append("\t")
 
@@ -123,28 +123,26 @@ if __name__ == "__main__":
         results = results + 1
         if int(line[3]) != 2:
             indents[module_identifier].pop()
-        print "%s%s\tResult: %s: %s"%(
-                module_identifier.ljust(max_lengths["module_identifier"], " "),
-                "".join(indents[module_identifier]),
-                all_tables["EVENT_LIST"][module_identifier][int(line[2])],
-                result_names[int(line[3])]
-                )
-                
-
+        print "%s%s\tResult: %s: %s" % (
+            module_identifier.ljust(max_lengths["module_identifier"], " "),
+            "".join(indents[module_identifier]),
+            all_tables["EVENT_LIST"][module_identifier][int(line[2])],
+            result_names[int(line[3])]
+        )
 
     def process_t(line):
         module_identifier = address_maps[line[1]]
-        print "%s Transition: %s -> %s"%(
-                module_identifier.ljust(max_lengths["module_identifier"], " "),
-                all_tables["STATE_LIST"][module_identifier][int(line[2])-1],
-                all_tables["STATE_LIST"][module_identifier][int(line[3])-1]
-                )
+        print "%s Transition: %s -> %s" % (
+            module_identifier.ljust(max_lengths["module_identifier"], " "),
+            all_tables["STATE_LIST"][module_identifier][int(line[2]) - 1],
+            all_tables["STATE_LIST"][module_identifier][int(line[3]) - 1]
+        )
 
     process_func = {
-        "s" : process_s,
-        "i" : process_i,
-        "r" : process_r,
-        "t" : process_t
+        "s": process_s,
+        "i": process_i,
+        "r": process_r,
+        "t": process_t
     }
 
     for log_file in args.log_file:
@@ -162,7 +160,6 @@ if __name__ == "__main__":
             else:
                 print line
 
-
         log_file.close()
         if events != results:
-            print "=============\n Events: %d\nResults: %d"%(events, results)
+            print "=============\n Events: %d\nResults: %d" % (events, results)
